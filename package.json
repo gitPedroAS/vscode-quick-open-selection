@@ -15,6 +15,7 @@
     "onCommand:quickOpenSelection.searchFile"
   ],
   "extensionKind": [
+    "workspace",
     "ui"
   ],
   "homepage": "https://github.com/gitPedroAS/vscode-quick-open-selection",
