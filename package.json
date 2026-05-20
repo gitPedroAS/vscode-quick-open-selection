@@ -12,7 +12,8 @@
   "categories": [],
   "activationEvents": [
     "onCommand:quickOpenSelection.searchText",
-    "onCommand:quickOpenSelection.searchFile"
+    "onCommand:quickOpenSelection.searchFile",
+    "onCommand:quickOpenSelection.toggleSymlinks"
   ],
   "extensionKind": [
     "workspace",
@@ -30,14 +31,19 @@
   "contributes": {
     "commands": [
       {
-        "title": "Quick Open: Search selected text in files (%)",
-        "category": "Search",
+        "title": "Search selected text in files (%)",
+        "category": "Quick Open",
         "command": "quickOpenSelection.searchText"
       },
       {
-        "title": "Quick Open: Search selected text as filename",
-        "category": "Search",
+        "title": "Search selected text as filename",
+        "category": "Quick Open",
         "command": "quickOpenSelection.searchFile"
+      },
+      {
+        "title": "Toggle symlink inclusion in search",
+        "category": "Quick Open",
+        "command": "quickOpenSelection.toggleSymlinks"
       }
     ]
   },
