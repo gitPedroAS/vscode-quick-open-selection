@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "vscode:prepublish", "--loglevel", "silent"],
+			"problemMatcher": "$tsc",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
