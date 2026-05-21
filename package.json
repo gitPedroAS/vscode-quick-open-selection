@@ -3,7 +3,7 @@
   "description": "Open Quick Open pre-filled with the current selection — search text in files (%) or by filename",
   "author": "Pedro Santos",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "gitPedroAS",
   "preview": true,
   "engines": {
@@ -15,7 +15,8 @@
     "onCommand:quickOpenSelection.searchFile",
     "onCommand:quickOpenSelection.toggleSymlinks",
     "onCommand:quickOpenSelection.setSearchRoot",
-    "onCommand:quickOpenSelection.resetSearchRoot"
+    "onCommand:quickOpenSelection.resetSearchRoot",
+    "onCommand:quickOpenSelection.dirPickerRight"
   ],
   "extensionKind": [
     "workspace",
@@ -56,6 +57,13 @@
         "title": "Reset search root",
         "category": "Quick Open",
         "command": "quickOpenSelection.resetSearchRoot"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "right",
+        "command": "quickOpenSelection.dirPickerRight",
+        "when": "inQuickOpen && quickOpenSelection.dirPickerOpen"
       }
     ]
   },

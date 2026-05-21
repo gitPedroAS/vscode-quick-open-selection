@@ -4,6 +4,9 @@ import { promises as nodeFs } from 'fs';
 
 const SEARCH_ROOT_STATE_KEY = 'savedFilesExclude';
 
+// Shared ref to the currently open dir picker so the right-arrow command can access it.
+let currentDirPicker: vscode.QuickPick<vscode.QuickPickItem> | undefined;
+
 function getSelectedText(): string {
   const editor = vscode.window.activeTextEditor;
   return editor ? editor.document.getText(editor.selection) : '';
@@ -22,12 +25,16 @@ async function matchingSubdirs(parentAbsPath: string, prefix: string): Promise<s
 }
 
 // Shows a QuickPick that lets the user navigate/autocomplete subdirectories.
+// Right arrow autofills the active (or first) suggestion and descends into it.
 // Returns the chosen relative path (e.g. "src/components") or undefined if cancelled.
 async function pickDirectory(workspaceRoot: string): Promise<string | undefined> {
   return new Promise(resolve => {
     const qp = vscode.window.createQuickPick();
-    qp.placeholder = 'Type a relative directory path (e.g. src/components)';
+    qp.placeholder = 'Type a relative directory path — press → to autocomplete';
     qp.title = 'Quick Open: Set search root';
+
+    currentDirPicker = qp;
+    vscode.commands.executeCommand('setContext', 'quickOpenSelection.dirPickerOpen', true);
 
     let lastInput = '';
 
@@ -51,12 +58,14 @@ async function pickDirectory(workspaceRoot: string): Promise<string | undefined>
     refresh('');
 
     qp.onDidAccept(() => {
-      const selected = qp.selectedItems[0]?.label ?? qp.value.trim();
+      const selected = qp.selectedItems[0]?.label ?? qp.value.trim().replace(/\/$/, '');
       qp.hide();
       resolve(selected || undefined);
     });
 
     qp.onDidHide(() => {
+      currentDirPicker = undefined;
+      vscode.commands.executeCommand('setContext', 'quickOpenSelection.dirPickerOpen', false);
       qp.dispose();
       resolve(undefined);
     });
@@ -93,7 +102,7 @@ async function buildExcludePatterns(workspaceRoot: string, targetRelPath: string
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  // Opens Quick Open with % prefix + selected text - searches text content across files.
+  // Opens Quick Open with % prefix + selected text — searches text content across files.
   context.subscriptions.push(
     vscode.commands.registerCommand('quickOpenSelection.searchText', () => {
       const text = getSelectedText();
@@ -101,7 +110,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Opens Quick Open with selected text - searches for files by name.
+  // Opens Quick Open with selected text — searches for files by name.
   context.subscriptions.push(
     vscode.commands.registerCommand('quickOpenSelection.searchFile', () => {
       const text = getSelectedText();
@@ -109,13 +118,17 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Toggles search.followSymlinks - affects all search operations including % and Ctrl+P.
+  // Toggles search.followSymlinks — affects all search operations including % and Ctrl+P.
   context.subscriptions.push(
     vscode.commands.registerCommand('quickOpenSelection.toggleSymlinks', async () => {
       const config = vscode.workspace.getConfiguration('search');
       const current = config.get<boolean>('followSymlinks', true);
-      await config.update('followSymlinks', !current, vscode.ConfigurationTarget.Global);
-      vscode.window.showInformationMessage(`ℹ️ Quick Open: Symbolic link search ${!current ? 'enabled' : 'disabled'}`);
+      try {
+        await config.update('followSymlinks', !current, vscode.ConfigurationTarget.Global);
+        vscode.window.showInformationMessage(`Quick Open: Symbolic link search ${!current ? 'enabled' : 'disabled'}`);
+      } catch {
+        vscode.window.showWarningMessage('Quick Open: Please save your settings file before toggling symlink search.');
+      }
     })
   );
 
@@ -140,7 +153,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const added = await buildExcludePatterns(workspaceRoot, chosen);
       await filesConfig.update('exclude', { ...current, ...added }, vscode.ConfigurationTarget.Workspace);
 
-      vscode.window.showInformationMessage(`ℹ️ Quick Open: Search root narrowed to ${chosen}`);
+      vscode.window.showInformationMessage(`Quick Open: Search root narrowed to ${chosen}`);
       vscode.commands.executeCommand('workbench.action.quickOpen');
     })
   );
@@ -150,16 +163,28 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('quickOpenSelection.resetSearchRoot', async () => {
       const saved = context.globalState.get<Record<string, boolean>>(SEARCH_ROOT_STATE_KEY);
       if (saved === undefined) {
-        vscode.window.showInformationMessage('ℹ️ Quick Open: No saved search root to reset.');
+        vscode.window.showInformationMessage('Quick Open: No saved search root to reset.');
         return;
       }
       const filesConfig = vscode.workspace.getConfiguration('files');
       await filesConfig.update('exclude', saved, vscode.ConfigurationTarget.Workspace);
       await context.globalState.update(SEARCH_ROOT_STATE_KEY, undefined);
-      vscode.window.showInformationMessage('ℹ️ Quick Open: Search root reset to workspace.');
+      vscode.window.showInformationMessage('Quick Open: Search root reset to workspace.');
+    })
+  );
+
+  // Autofills the active (or first) dir suggestion when right arrow is pressed in our picker.
+  // Triggered via the keybinding when quickOpenSelection.dirPickerOpen context is true.
+  context.subscriptions.push(
+    vscode.commands.registerCommand('quickOpenSelection.dirPickerRight', () => {
+      if (!currentDirPicker) return;
+      const target = currentDirPicker.activeItems[0] ?? currentDirPicker.items[0];
+      if (target) {
+        // Append trailing slash to descend into the selected directory.
+        currentDirPicker.value = target.label + '/';
+      }
     })
   );
 }
 
 export function deactivate(): void {}
-
