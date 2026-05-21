@@ -13,7 +13,9 @@
   "activationEvents": [
     "onCommand:quickOpenSelection.searchText",
     "onCommand:quickOpenSelection.searchFile",
-    "onCommand:quickOpenSelection.toggleSymlinks"
+    "onCommand:quickOpenSelection.toggleSymlinks",
+    "onCommand:quickOpenSelection.setSearchRoot",
+    "onCommand:quickOpenSelection.resetSearchRoot"
   ],
   "extensionKind": [
     "workspace",
@@ -44,6 +46,16 @@
         "title": "Toggle symlink inclusion in search",
         "category": "Quick Open",
         "command": "quickOpenSelection.toggleSymlinks"
+      },
+      {
+        "title": "Set search root",
+        "category": "Quick Open",
+        "command": "quickOpenSelection.setSearchRoot"
+      },
+      {
+        "title": "Reset search root",
+        "category": "Quick Open",
+        "command": "quickOpenSelection.resetSearchRoot"
       }
     ]
   },
