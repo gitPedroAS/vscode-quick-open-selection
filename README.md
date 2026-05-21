@@ -29,8 +29,8 @@ Ctrl+P naturally filters its results to files whose paths start with the chosen 
 Add to your `keybindings.json`:
 
 ```json
-{ "key": "ctrl+alt+f", "command": "quickOpenSE.searchText", "when": "editorTextFocus && editorHasSelection" },
-{ "key": "ctrl+alt+p", "command": "quickOpenSE.searchFile", "when": "editorTextFocus && editorHasSelection" }
+{ "key": "ctrl+alt+f", "command": "qosEnhancements.searchText", "when": "editorTextFocus && editorHasSelection" },
+{ "key": "ctrl+alt+p", "command": "qosEnhancements.searchFile", "when": "editorTextFocus && editorHasSelection" }
 ```
 
 ## Notes

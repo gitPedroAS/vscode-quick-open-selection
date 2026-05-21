@@ -60,7 +60,7 @@ async function pickDirectory(workspaceRoot: string): Promise<string | undefined>
     let disposed = false;
 
     currentDirPicker = qp;
-    vscode.commands.executeCommand('setContext', 'quickOpenSE.dirPickerOpen', true);
+    vscode.commands.executeCommand('setContext', 'qosEnhancements.dirPickerOpen', true);
 
     let lastInput = '';
     let refreshTimer: ReturnType<typeof setTimeout> | undefined;
@@ -106,7 +106,7 @@ async function pickDirectory(workspaceRoot: string): Promise<string | undefined>
       // Only clear shared state if this is still the active picker (guards against re-entry).
       if (currentDirPicker === qp) {
         currentDirPicker = undefined;
-        vscode.commands.executeCommand('setContext', 'quickOpenSE.dirPickerOpen', false);
+        vscode.commands.executeCommand('setContext', 'qosEnhancements.dirPickerOpen', false);
       }
       qp.dispose();
       settle(undefined);
@@ -123,7 +123,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Opens Quick Open with % prefix + selected text — searches text content across files.
   context.subscriptions.push(
-    vscode.commands.registerCommand('quickOpenSE.searchText', () => {
+    vscode.commands.registerCommand('qosEnhancements.searchText', () => {
       const text = getSelectedText();
       if (text) vscode.commands.executeCommand('workbench.action.quickOpen', `%${text}`);
     })
@@ -131,7 +131,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Opens Quick Open with selected text — searches for files by name.
   context.subscriptions.push(
-    vscode.commands.registerCommand('quickOpenSE.searchFile', () => {
+    vscode.commands.registerCommand('qosEnhancements.searchFile', () => {
       const text = getSelectedText();
       if (text) vscode.commands.executeCommand('workbench.action.quickOpen', text);
     })
@@ -139,7 +139,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Toggles search.followSymlinks — affects all search operations including % and Ctrl+P.
   context.subscriptions.push(
-    vscode.commands.registerCommand('quickOpenSE.toggleSymlinks', async () => {
+    vscode.commands.registerCommand('qosEnhancements.toggleSymlinks', async () => {
       const config = vscode.workspace.getConfiguration('search');
       const current = config.get<boolean>('followSymlinks', true);
       try {
@@ -154,7 +154,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // Prompts for a subdirectory then opens Ctrl+P pre-filled with that path.
   // Ctrl+P naturally filters results to files whose paths start with the chosen directory.
   context.subscriptions.push(
-    vscode.commands.registerCommand('quickOpenSE.searchInDirectory', async () => {
+    vscode.commands.registerCommand('qosEnhancements.searchInDirectory', async () => {
       const folders = vscode.workspace.workspaceFolders;
       if (!folders?.length) {
         vscode.window.showWarningMessage('Quick Open: No workspace folder open.');
@@ -168,9 +168,9 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Autofills the active (or first) dir suggestion when right arrow is pressed in our picker.
-  // Triggered via keybinding scoped to quickOpenSE.dirPickerOpen context.
+  // Triggered via keybinding scoped to qosEnhancements.dirPickerOpen context.
   context.subscriptions.push(
-    vscode.commands.registerCommand('quickOpenSE.dirPickerRight', () => {
+    vscode.commands.registerCommand('qosEnhancements.dirPickerRight', () => {
       if (!currentDirPicker) return;
       const target = currentDirPicker.activeItems[0] ?? currentDirPicker.items[0];
       if (target) {

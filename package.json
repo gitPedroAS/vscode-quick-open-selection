@@ -12,11 +12,11 @@
   },
   "categories": [],
   "activationEvents": [
-    "onCommand:quickOpenSE.searchText",
-    "onCommand:quickOpenSE.searchFile",
-    "onCommand:quickOpenSE.toggleSymlinks",
-    "onCommand:quickOpenSE.searchInDirectory",
-    "onCommand:quickOpenSE.dirPickerRight"
+    "onCommand:qosEnhancements.searchText",
+    "onCommand:qosEnhancements.searchFile",
+    "onCommand:qosEnhancements.toggleSymlinks",
+    "onCommand:qosEnhancements.searchInDirectory",
+    "onCommand:qosEnhancements.dirPickerRight"
   ],
   "extensionKind": [
     "workspace",
@@ -36,29 +36,29 @@
       {
         "title": "Search selected text in files (%)",
         "category": "Quick Open",
-        "command": "quickOpenSE.searchText"
+        "command": "qosEnhancements.searchText"
       },
       {
         "title": "Search selected text as filename",
         "category": "Quick Open",
-        "command": "quickOpenSE.searchFile"
+        "command": "qosEnhancements.searchFile"
       },
       {
         "title": "Toggle symlink inclusion in search",
         "category": "Quick Open",
-        "command": "quickOpenSE.toggleSymlinks"
+        "command": "qosEnhancements.toggleSymlinks"
       },
       {
         "title": "Search in directory",
         "category": "Quick Open",
-        "command": "quickOpenSE.searchInDirectory"
+        "command": "qosEnhancements.searchInDirectory"
       }
     ],
     "keybindings": [
       {
         "key": "right",
-        "command": "quickOpenSE.dirPickerRight",
-        "when": "inQuickOpen && quickOpenSE.dirPickerOpen"
+        "command": "qosEnhancements.dirPickerRight",
+        "when": "inQuickOpen && qosEnhancements.dirPickerOpen"
       }
     ]
   },
