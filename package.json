@@ -1,9 +1,10 @@
 {
-  "name": "quick-open-selection",
-  "description": "Open Quick Open pre-filled with the current selection — search text in files (%) or by filename",
+  "name": "quick-open-and-search-enhancements",
+  "displayName": "Quick Open & Search Enhancements",
+  "description": "Enhance VS Code Quick Open: search selected text, search in a chosen directory, toggle symlink following",
   "author": "Pedro Santos",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "gitPedroAS",
   "preview": true,
   "engines": {
@@ -11,24 +12,23 @@
   },
   "categories": [],
   "activationEvents": [
-    "onCommand:quickOpenSelection.searchText",
-    "onCommand:quickOpenSelection.searchFile",
-    "onCommand:quickOpenSelection.toggleSymlinks",
-    "onCommand:quickOpenSelection.setSearchRoot",
-    "onCommand:quickOpenSelection.resetSearchRoot",
-    "onCommand:quickOpenSelection.dirPickerRight"
+    "onCommand:quickOpenSE.searchText",
+    "onCommand:quickOpenSE.searchFile",
+    "onCommand:quickOpenSE.toggleSymlinks",
+    "onCommand:quickOpenSE.searchInDirectory",
+    "onCommand:quickOpenSE.dirPickerRight"
   ],
   "extensionKind": [
     "workspace",
     "ui"
   ],
-  "homepage": "https://github.com/gitPedroAS/vscode-quick-open-selection",
+  "homepage": "https://github.com/gitPedroAS/vscode-quick-open-and-search-enhancements",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gitPedroAS/vscode-quick-open-selection.git"
+    "url": "https://github.com/gitPedroAS/vscode-quick-open-and-search-enhancements.git"
   },
   "bugs": {
-    "url": "https://github.com/gitPedroAS/vscode-quick-open-selection/issues"
+    "url": "https://github.com/gitPedroAS/vscode-quick-open-and-search-enhancements/issues"
   },
   "main": "./out/src/extension",
   "contributes": {
@@ -36,34 +36,29 @@
       {
         "title": "Search selected text in files (%)",
         "category": "Quick Open",
-        "command": "quickOpenSelection.searchText"
+        "command": "quickOpenSE.searchText"
       },
       {
         "title": "Search selected text as filename",
         "category": "Quick Open",
-        "command": "quickOpenSelection.searchFile"
+        "command": "quickOpenSE.searchFile"
       },
       {
         "title": "Toggle symlink inclusion in search",
         "category": "Quick Open",
-        "command": "quickOpenSelection.toggleSymlinks"
+        "command": "quickOpenSE.toggleSymlinks"
       },
       {
-        "title": "Set search root",
+        "title": "Search in directory",
         "category": "Quick Open",
-        "command": "quickOpenSelection.setSearchRoot"
-      },
-      {
-        "title": "Reset search root",
-        "category": "Quick Open",
-        "command": "quickOpenSelection.resetSearchRoot"
+        "command": "quickOpenSE.searchInDirectory"
       }
     ],
     "keybindings": [
       {
         "key": "right",
-        "command": "quickOpenSelection.dirPickerRight",
-        "when": "inQuickOpen && quickOpenSelection.dirPickerOpen"
+        "command": "quickOpenSE.dirPickerRight",
+        "when": "inQuickOpen && quickOpenSE.dirPickerOpen"
       }
     ]
   },
